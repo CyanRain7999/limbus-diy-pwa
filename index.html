@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Limbus DIY 人格网页编辑器</title>
+<meta name="theme-color" content="#0a0d0d" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Limbus DIY" />
+<link rel="manifest" href="./manifest.webmanifest" />
+<link rel="icon" href="./icons/icon-192.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="./icons/icon-192.png" />
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+<div class="app">
+<aside class="editor">
+  <div class="topbar">
+    <button class="btn primary" onclick="saveLocal()">保存到本机</button>
+    <button class="btn" id="installPwaBtn" type="button">安装 PWA</button>
+    <button class="btn" onclick="loadLocal()">读取本机</button>
+    <button class="btn" onclick="downloadJson()">导出项目</button>
+    <button class="btn" onclick="document.getElementById('filePick').click()">导入项目</button>
+    <input id="filePick" type="file" accept="application/json" hidden onchange="importJson(this.files[0])">
+    <button class="btn primary" onclick="savePage('skillsPage','技能页')">保存 / 分享技能页（自动染色版）</button>
+    <button class="btn primary" onclick="savePage('passivePage','被动页')">保存 / 分享被动页（自动染色版）</button>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('basic',this)">基础</button>
+    <button class="tab" onclick="showTab('skills',this)">技能</button>
+    <button class="tab" onclick="showTab('passives',this)">被动</button>
+    <button class="tab" onclick="showTab('statuses',this)">状态</button>
+  </div>
+
+  <section class="panel active" id="tab-basic">
+    <div class="group"><h3>人格信息</h3>
+      <div class="field"><label>组织 / 系列</label><input id="org" oninput="syncBasic()"></div>
+      <div class="field"><label>角色名</label><input id="name" oninput="syncBasic()"></div>
+      <div class="field"><label>副标题</label><input id="subtitle" oninput="syncBasic()"></div>
+      <div class="row"><div class="field"><label>生命值</label><input id="hp" oninput="syncBasic()"></div><div class="field"><label>速度</label><input id="speed" oninput="syncBasic()"></div></div>
+      <div class="row"><div class="field"><label>防御等级</label><input id="def" oninput="syncBasic()"></div><div class="field"><label>星级</label><select id="stars" onchange="syncBasic()"><option value="◈">一灯</option><option value="◈◈">二灯</option><option value="◈◈◈" selected>三灯</option></select></div></div>
+      <div class="field"><label>抗性 / 混乱阈值</label><input id="resists" oninput="syncBasic()" placeholder="斩击2.0 / 突刺1.0 / 打击0.5 / 混乱50%,10%"></div>
+    </div>
+    <div class="group"><h3>被动页摘要</h3>
+      <div class="field"><label>定位</label><input id="role" oninput="syncBasic()"></div>
+      <div class="row"><div class="field"><label>主罪孽</label><input id="sins" oninput="syncBasic()"></div><div class="field"><label>副体系</label><input id="systems" oninput="syncBasic()"></div></div>
+      <div class="field"><label>核心循环</label><input id="cycle" oninput="syncBasic()"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="tab-skills">
+    <div class="group"><h3>技能列表</h3><div id="skillsEditor"></div><button class="btn primary" onclick="addSkill()">+ 新增技能</button></div>
+  </section>
+  <section class="panel" id="tab-passives">
+    <div class="group"><h3>被动列表</h3><div id="passivesEditor"></div><button class="btn primary" onclick="addPassive()">+ 新增被动</button></div>
+  </section>
+  <section class="panel" id="tab-statuses">
+    <div class="group"><h3>独有状态</h3><div id="statusesEditor"></div><button class="btn primary" onclick="addStatus()">+ 新增状态</button></div>
+    <div class="group"><h3>关联状态图标</h3><div class="hint">一行一个，格式：文件名|显示名，例如 Bleed.png|流血</div><textarea id="related" oninput="syncRelated()"></textarea></div>
+  </section>
+</aside>
+<main class="preview" id="preview"></main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="./app.js"></script>
+</body></html>
