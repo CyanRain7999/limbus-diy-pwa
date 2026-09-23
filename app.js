@@ -48,6 +48,14 @@ function normalizeData(){
   data.related=Array.isArray(data.related)?data.related:[];
 }
 normalizeData();
+let __previewRenderTimer=null;
+function scheduleRender(delay=70){
+  if(__previewRenderTimer) clearTimeout(__previewRenderTimer);
+  __previewRenderTimer=setTimeout(()=>{
+    __previewRenderTimer=null;
+    render();
+  },delay);
+}
 function showTab(id,btn){document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.getElementById('tab-'+id).classList.add('active');btn.classList.add('active')}
 function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function regexEsc(s=''){return String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}
@@ -101,8 +109,8 @@ function fmt(s=''){
   return x;
 }
 function splitLines(s=''){return s.split(/\n+/).filter(Boolean).map(x=>`<p>${fmt(x)}</p>`).join('')}
-function syncBasic(){['org','name','subtitle','hp','speed','def','resists','role','sins','systems','cycle'].forEach(k=>data.identity[k]=document.getElementById(k).value);data.identity.stars=document.getElementById('stars').value;render()}
-function syncRelated(){data.related=document.getElementById('related').value.split(/\n+/).filter(Boolean).map(x=>{let [f,l]=x.split('|');return [f?.trim()||'',l?.trim()||'']});render()}
+function syncBasic(){['org','name','subtitle','hp','speed','def','resists','role','sins','systems','cycle'].forEach(k=>data.identity[k]=document.getElementById(k).value);data.identity.stars=document.getElementById('stars').value;scheduleRender()}
+function syncRelated(){data.related=document.getElementById('related').value.split(/\n+/).filter(Boolean).map(x=>{let [f,l]=x.split('|');return [f?.trim()||'',l?.trim()||'']});scheduleRender()}
 function bindBasic(){for(const k of ['org','name','subtitle','hp','speed','def','resists','role','sins','systems','cycle'])document.getElementById(k).value=data.identity[k]||'';document.getElementById('stars').value=data.identity.stars||'◈◈◈';document.getElementById('related').value=data.related.map(x=>x.join('|')).join('\n')}
 function sinOpts(sel){return Object.entries(sins).map(([k,v])=>`<option value="${k}" ${sel===k?'selected':''}>${v[0]}</option>`).join('')}
 function frameOpts(sel='auto'){return FRAME_OPTIONS.map(opt=>`<option value="${opt.value}" ${sel===opt.value?'selected':''}>${opt.label}</option>`).join('')}
@@ -154,18 +162,26 @@ function renderEditors(){
  const iconHint=SKILL_ICON_MANIFEST.length
    ? `<div class="hint editor-hint">已载入 ${SKILL_ICON_MANIFEST.length} 个 LCB 技能图标选项。图片文件需要存在于 assets/skill_icons/lcb/；GitHub Pages 使用时记得把下载后的 assets 一起 Commit + Push。</div>`
    : `<div class="hint editor-hint">图标选项初始化失败。</div>`;
- s.innerHTML=iconHint+data.skills.map((raw,i)=>{const x=normalizeSkill(raw);return `<div class="card-editor"><div class="card-head"><b>${esc(x.section)} · ${esc(x.name)}</b><button class="btn small danger" onclick="delSkill(${i})">删除</button></div><div class="row"><div class="field"><label>区块标题</label><input value="${esc(x.section)}" oninput="setSkill(${i},'section',this.value)"></div><div class="field"><label>技能名</label><input value="${esc(x.name)}" oninput="setSkill(${i},'name',this.value)"></div></div><div class="row"><div class="field"><label>罪孽</label><select onchange="setSkill(${i},'sin',this.value)">${sinOpts(x.sin)}</select></div><div class="field"><label>伤害类型 / 守备描述</label><input value="${esc(x.type)}" oninput="setSkill(${i},'type',this.value)"></div></div><div class="row"><div class="field"><label>技能框</label><select onchange="setSkill(${i},'frame',this.value)">${frameOpts(x.frame)}</select></div><div class="field"><label>技能图标（本地清单）</label><select onchange="setSkill(${i},'icon',this.value)">${iconOpts(x.icon)}</select></div></div><div class="row icon-tune-row"><div class="field"><label>图标横向微调（px）</label><input type="number" step="1" value="${esc(x.iconX)}" onchange="setSkill(${i},'iconX',Number(this.value))"></div><div class="field"><label>图标纵向微调（px）</label><input type="number" step="1" value="${esc(x.iconY)}" onchange="setSkill(${i},'iconY',Number(this.value))"></div></div><div class="field"><label>图标缩放</label><input type="number" min="0.75" max="1.2" step="0.02" value="${esc(x.iconScale)}" onchange="setSkill(${i},'iconScale',Number(this.value))"><div class="hint">默认已经微调：S1 右移 2px / 下移 1px；守备右移 3px / 下移 1px。不同原图留白不一致时可继续手调。</div></div><div class="row"><div class="field"><label>守备类型</label><select onchange="setSkill(${i},'defenseType',this.value)">${defenseTypeOpts(x.defenseType)}</select><div class="hint">守备技能可选 Guard / Evade / Counter；普通技能保持“自动”就行。</div></div><div class="field"><label>版式</label><select onchange="setSkill(${i},'size',this.value)"><option ${x.size==='compact'?'selected':''} value="compact">短</option><option ${x.size==='medium'?'selected':''} value="medium">中</option><option ${x.size==='tall'?'selected':''} value="tall">长</option></select></div></div><div class="row"><div class="field"><label>攻击等级修正</label><input value="${esc(x.offense)}" oninput="setSkill(${i},'offense',this.value)"></div><div class="field"><label>攻击容量</label><input value="${esc(x.capacity)}" oninput="setSkill(${i},'capacity',this.value)"></div></div><div class="row"><div class="field"><label>基础值</label><input value="${esc(x.base)}" oninput="setSkill(${i},'base',this.value)"></div><div class="field"><label><input type="checkbox" ${x.defense?'checked':''} onchange="setSkill(${i},'defense',this.checked)"> 这是守备技能</label></div></div><div class="field"><label>硬币</label><div class="coin-list">${x.coins.map((c,j)=>`<span class="coin-chip"><input value="${esc(c)}" oninput="setCoin(${i},${j},this.value)"><button class="btn small danger" onclick="delCoin(${i},${j})">×</button></span>`).join('')}<button class="btn small" onclick="addCoin(${i})">+硬币</button></div></div><div class="field"><label>效果（一行一条）</label><textarea oninput="setSkill(${i},'effects',this.value)">${esc(x.effects)}</textarea></div></div>`}).join('');
+ s.innerHTML=iconHint+data.skills.map((raw,i)=>{const x=normalizeSkill(raw);return `<div class="card-editor"><div class="card-head"><b data-skill-head="${i}">${esc(x.section)} · ${esc(x.name)}</b><button class="btn small danger" onclick="delSkill(${i})">删除</button></div><div class="row"><div class="field"><label>区块标题</label><input value="${esc(x.section)}" oninput="setSkill(${i},'section',this.value)"></div><div class="field"><label>技能名</label><input value="${esc(x.name)}" oninput="setSkill(${i},'name',this.value)"></div></div><div class="row"><div class="field"><label>罪孽</label><select onchange="setSkill(${i},'sin',this.value)">${sinOpts(x.sin)}</select></div><div class="field"><label>伤害类型 / 守备描述</label><input value="${esc(x.type)}" oninput="setSkill(${i},'type',this.value)"></div></div><div class="row"><div class="field"><label>技能框</label><select onchange="setSkill(${i},'frame',this.value)">${frameOpts(x.frame)}</select></div><div class="field"><label>技能图标（本地清单）</label><select onchange="setSkill(${i},'icon',this.value)">${iconOpts(x.icon)}</select></div></div><div class="row icon-tune-row"><div class="field"><label>图标横向微调（px）</label><input type="number" step="1" value="${esc(x.iconX)}" onchange="setSkill(${i},'iconX',Number(this.value))"></div><div class="field"><label>图标纵向微调（px）</label><input type="number" step="1" value="${esc(x.iconY)}" onchange="setSkill(${i},'iconY',Number(this.value))"></div></div><div class="field"><label>图标缩放</label><input type="number" min="0.75" max="1.2" step="0.02" value="${esc(x.iconScale)}" onchange="setSkill(${i},'iconScale',Number(this.value))"><div class="hint">默认已经微调：S1 右移 2px / 下移 1px；守备右移 3px / 下移 1px。不同原图留白不一致时可继续手调。</div></div><div class="row"><div class="field"><label>守备类型</label><select onchange="setSkill(${i},'defenseType',this.value)">${defenseTypeOpts(x.defenseType)}</select><div class="hint">守备技能可选 Guard / Evade / Counter；普通技能保持“自动”就行。</div></div><div class="field"><label>版式</label><select onchange="setSkill(${i},'size',this.value)"><option ${x.size==='compact'?'selected':''} value="compact">短</option><option ${x.size==='medium'?'selected':''} value="medium">中</option><option ${x.size==='tall'?'selected':''} value="tall">长</option></select></div></div><div class="row"><div class="field"><label>攻击等级修正</label><input value="${esc(x.offense)}" oninput="setSkill(${i},'offense',this.value)"></div><div class="field"><label>攻击容量</label><input value="${esc(x.capacity)}" oninput="setSkill(${i},'capacity',this.value)"></div></div><div class="row"><div class="field"><label>基础值</label><input value="${esc(x.base)}" oninput="setSkill(${i},'base',this.value)"></div><div class="field"><label><input type="checkbox" ${x.defense?'checked':''} onchange="setSkill(${i},'defense',this.checked)"> 这是守备技能</label></div></div><div class="field"><label>硬币</label><div class="coin-list">${x.coins.map((c,j)=>`<span class="coin-chip"><input value="${esc(c)}" oninput="setCoin(${i},${j},this.value)"><button class="btn small danger" onclick="delCoin(${i},${j})">×</button></span>`).join('')}<button class="btn small" onclick="addCoin(${i})">+硬币</button></div></div><div class="field"><label>效果（一行一条）</label><textarea oninput="setSkill(${i},'effects',this.value)">${esc(x.effects)}</textarea></div></div>`}).join('');
  const p=document.getElementById('passivesEditor');p.innerHTML=data.passives.map((x,i)=>`<div class="card-editor"><div class="card-head"><b>${esc(x.title)} · ${esc(x.name)}</b><button class="btn small danger" onclick="delPassive(${i})">删除</button></div><div class="row"><div class="field"><label>大标题</label><input value="${esc(x.title)}" oninput="setPassive(${i},'title',this.value)"></div><div class="field"><label>被动名</label><input value="${esc(x.name)}" oninput="setPassive(${i},'name',this.value)"></div></div><div class="field"><label>触发条件 / 消耗</label><input value="${esc(x.cost)}" oninput="setPassive(${i},'cost',this.value)"></div><div class="field"><label>效果</label><textarea oninput="setPassive(${i},'effects',this.value)">${esc(x.effects)}</textarea></div><div class="field"><label><input type="checkbox" ${x.support?'checked':''} onchange="setPassive(${i},'support',this.checked)"> 支援被动样式</label></div></div>`).join('');
  const t=document.getElementById('statusesEditor');t.innerHTML=data.statuses.map((x,i)=>`<div class="card-editor"><div class="card-head"><b>${esc(x.name)}</b><button class="btn small danger" onclick="delStatus(${i})">删除</button></div><div class="row"><div class="field"><label>状态名</label><input value="${esc(x.name)}" oninput="setStatus(${i},'name',this.value)"></div><div class="field"><label>最大层数说明</label><input value="${esc(x.cap)}" oninput="setStatus(${i},'cap',this.value)"></div></div><div class="field"><label>图标字符（也可填✿❀✹）</label><input value="${esc(x.icon)}" oninput="setStatus(${i},'icon',this.value)"></div><div class="field"><label>效果</label><textarea oninput="setStatus(${i},'effects',this.value)">${esc(x.effects)}</textarea></div></div>`).join('')
 }
-function setSkill(i,k,v){data.skills[i]=normalizeSkill(data.skills[i]);data.skills[i][k]=v;renderEditors();render()};
-function setCoin(i,j,v){data.skills[i]=normalizeSkill(data.skills[i]);data.skills[i].coins[j]=v;render()};
+function setSkill(i,k,v){
+  data.skills[i]=normalizeSkill(data.skills[i]);
+  data.skills[i][k]=v;
+  if(k==='section' || k==='name'){
+    const head=document.querySelector(`[data-skill-head="${i}"]`);
+    if(head) head.textContent=`${data.skills[i].section} · ${data.skills[i].name}`;
+  }
+  scheduleRender();
+};
+function setCoin(i,j,v){data.skills[i]=normalizeSkill(data.skills[i]);data.skills[i].coins[j]=v;scheduleRender()};
 function addCoin(i){data.skills[i]=normalizeSkill(data.skills[i]);data.skills[i].coins.push('+1');renderEditors();render()};
 function delCoin(i,j){data.skills[i]=normalizeSkill(data.skills[i]);data.skills[i].coins.splice(j,1);renderEditors();render()};
 function addSkill(){data.skills.push(normalizeSkill({section:'SKILL '+(data.skills.length+1),name:'新技能',sin:'Lust',type:'斩击',offense:'+0',capacity:'1',base:'4',coins:['+4'],size:'compact',defense:false,effects:'[使用时] 在这里写效果'}));renderEditors();render()};
 function delSkill(i){data.skills.splice(i,1);renderEditors();render()}
-function setPassive(i,k,v){data.passives[i][k]=v;render()};function addPassive(){data.passives.push({title:'PASSIVE',name:'新被动',cost:'',support:false,effects:'在这里写效果'});renderEditors();render()};function delPassive(i){data.passives.splice(i,1);renderEditors();render()}
-function setStatus(i,k,v){data.statuses[i][k]=v;render()};function addStatus(){data.statuses.push({name:'新状态',cap:'最大层数 10',icon:'✿',effects:'在这里写效果'});renderEditors();render()};function delStatus(i){data.statuses.splice(i,1);renderEditors();render()}
+function setPassive(i,k,v){data.passives[i][k]=v;scheduleRender()};function addPassive(){data.passives.push({title:'PASSIVE',name:'新被动',cost:'',support:false,effects:'在这里写效果'});renderEditors();render()};function delPassive(i){data.passives.splice(i,1);renderEditors();render()}
+function setStatus(i,k,v){data.statuses[i][k]=v;scheduleRender()};function addStatus(){data.statuses.push({name:'新状态',cap:'最大层数 10',icon:'✿',effects:'在这里写效果'});renderEditors();render()};function delStatus(i){data.statuses.splice(i,1);renderEditors();render()}
 function resolveDefenseType(x={}){
   const raw=String(x.defenseType||'').trim().toLowerCase();
   if(raw==='guard'||raw==='evade'||raw==='counter') return raw;
@@ -213,14 +229,44 @@ function fallbackSkillAsset(img){
   const p=img.closest('.sigil');
   if(p) p.classList.add('asset-missing');
 }
-function fallbackSkillIcon(img){img.style.display='none'}
+function skillIconRemoteMeta(file='',meta=null){
+  const m=String(file||'').match(/^lcb\/(\d{5})-(s([1-3])|defense)\.webp$/i);
+  if(!m) return {remote:'',generic:''};
+  const id=m[1], kind=m[2].toLowerCase();
+  if(kind.startsWith('s')){
+    const slot=m[3];
+    return {remote:`${DIRECT_CDN}/skills/${id}0${slot}.webp`,generic:''};
+  }
+  const defType=String(meta?.defenseType||'guard').toLowerCase();
+  const genericName=defType==='counter'?'Counter':defType==='evade'?'Evade':'Guard';
+  return {
+    remote:`${DIRECT_CDN}/skills/${id}04_4.webp`,
+    generic:`${DIRECT_CDN}/icons/${genericName}.webp`
+  };
+}
+function fallbackSkillIcon(img){
+  const remote=img.dataset.remote;
+  const generic=img.dataset.generic;
+  if(remote && img.dataset.remoteTried!=='1'){
+    img.dataset.remoteTried='1';
+    img.src=remote;
+    return;
+  }
+  if(generic && img.dataset.genericTried!=='1'){
+    img.dataset.genericTried='1';
+    img.src=generic;
+    return;
+  }
+  img.style.display='none';
+}
 function skillIconImg(x){
   if(!x.icon) return '';
   const meta=findSkillIconMeta(x.icon);
   const label=meta?.label||x.name||'skill';
   const ix=Number(x.iconX)||0, iy=Number(x.iconY)||0;
   const scale=Math.max(.75,Math.min(1.2,Number(x.iconScale)||1));
-  return `<img class="skill-art" style="--icon-x:${ix}px;--icon-y:${iy}px;--icon-scale:${scale}" src="${esc(buildSkillIconPath(x.icon))}" alt="${esc(label)}" onerror="fallbackSkillIcon(this)">`;
+  const fallback=skillIconRemoteMeta(x.icon,meta);
+  return `<img class="skill-art" style="--icon-x:${ix}px;--icon-y:${iy}px;--icon-scale:${scale}" src="${esc(buildSkillIconPath(x.icon))}" data-remote="${esc(fallback.remote)}" data-generic="${esc(fallback.generic)}" alt="${esc(label)}" onerror="fallbackSkillIcon(this)">`;
 }
 function defenseBadge(x){const def=resolveDefenseType(x); return `<span class="def-type-badge def-${def}">${DEFENSE_TYPE_EN[def]||def.toUpperCase()}</span>`}
 function statusGlyph(file='',label=''){
@@ -509,7 +555,21 @@ window.addEventListener('appinstalled', ()=>{
 });
 
 if('serviceWorker' in navigator && location.protocol !== 'file:'){
-  window.addEventListener('load', ()=>{
-    navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('Service Worker 注册失败：',err));
+  let __swReloaded=false;
+  navigator.serviceWorker.addEventListener('controllerchange', ()=>{
+    if(__swReloaded) return;
+    __swReloaded=true;
+    if(sessionStorage.getItem('limbus-sw-v90-reloaded')!=='1'){
+      sessionStorage.setItem('limbus-sw-v90-reloaded','1');
+      location.reload();
+    }
+  });
+  window.addEventListener('load', async ()=>{
+    try{
+      const reg=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});
+      await reg.update();
+    }catch(err){
+      console.warn('Service Worker 注册失败：',err);
+    }
   });
 }
