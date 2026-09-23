@@ -1,0 +1,446 @@
+[
+  {
+    "file": "lcb/10101-s1.webp",
+    "label": "LCB Yi Sang - Skill 1",
+    "group": "LCB - Yi Sang",
+    "identity": "LCB Sinner",
+    "sinner": "Yi Sang",
+    "slot": "Skill 1",
+    "defense": false
+  },
+  {
+    "file": "lcb/10101-s2.webp",
+    "label": "LCB Yi Sang - Skill 2",
+    "group": "LCB - Yi Sang",
+    "identity": "LCB Sinner",
+    "sinner": "Yi Sang",
+    "slot": "Skill 2",
+    "defense": false
+  },
+  {
+    "file": "lcb/10101-s3.webp",
+    "label": "LCB Yi Sang - Skill 3",
+    "group": "LCB - Yi Sang",
+    "identity": "LCB Sinner",
+    "sinner": "Yi Sang",
+    "slot": "Skill 3",
+    "defense": false
+  },
+  {
+    "file": "lcb/10101-defense.webp",
+    "label": "LCB Yi Sang - Defense",
+    "group": "LCB - Yi Sang",
+    "identity": "LCB Sinner",
+    "sinner": "Yi Sang",
+    "slot": "Defense",
+    "defense": true,
+    "defenseType": "guard"
+  },
+  {
+    "file": "lcb/10201-s1.webp",
+    "label": "LCB Faust - Skill 1",
+    "group": "LCB - Faust",
+    "identity": "LCB Sinner",
+    "sinner": "Faust",
+    "slot": "Skill 1",
+    "defense": false
+  },
+  {
+    "file": "lcb/10201-s2.webp",
+    "label": "LCB Faust - Skill 2",
+    "group": "LCB - Faust",
+    "identity": "LCB Sinner",
+    "sinner": "Faust",
+    "slot": "Skill 2",
+    "defense": false
+  },
+  {
+    "file": "lcb/10201-s3.webp",
+    "label": "LCB Faust - Skill 3",
+    "group": "LCB - Faust",
+    "identity": "LCB Sinner",
+    "sinner": "Faust",
+    "slot": "Skill 3",
+    "defense": false
+  },
+  {
+    "file": "lcb/10201-defense.webp",
+    "label": "LCB Faust - Defense",
+    "group": "LCB - Faust",
+    "identity": "LCB Sinner",
+    "sinner": "Faust",
+    "slot": "Defense",
+    "defense": true,
+    "defenseType": "evade"
+  },
+  {
+    "file": "lcb/10301-s1.webp",
+    "label": "LCB Don Quixote - Skill 1",
+    "group": "LCB - Don Quixote",
+    "identity": "LCB Sinner",
+    "sinner": "Don Quixote",
+    "slot": "Skill 1",
+    "defense": false
+  },
+  {
+    "file": "lcb/10301-s2.webp",
+    "label": "LCB Don Quixote - Skill 2",
+    "group": "LCB - Don Quixote",
+    "identity": "LCB Sinner",
+    "sinner": "Don Quixote",
+    "slot": "Skill 2",
+    "defense": false
+  },
+  {
+    "file": "lcb/10301-s3.webp",
+    "label": "LCB Don Quixote - Skill 3",
+    "group": "LCB - Don Quixote",
+    "identity": "LCB Sinner",
+    "sinner": "Don Quixote",
+    "slot": "Skill 3",
+    "defense": false
+  },
+  {
+    "file": "lcb/10301-defense.webp",
+    "label": "LCB Don Quixote - Defense",
+    "group": "LCB - Don Quixote",
+    "identity": "LCB Sinner",
+    "sinner": "Don Quixote",
+    "slot": "Defense",
+    "defense": true,
+    "defenseType": "evade"
+  },
+  {
+    "file": "lcb/10401-s1.webp",
+    "label": "LCB Ryoshu - Skill 1",
+    "group": "LCB - Ryoshu",
+    "identity": "LCB Sinner",
+    "sinner": "Ryoshu",
+    "slot": "Skill 1",
+    "defense": false
+  },
+  {
+    "file": "lcb/10401-s2.webp",
+    "label": "LCB Ryoshu - Skill 2",
+    "group": "LCB - Ryoshu",
+    "identity": "LCB Sinner",
+    "sinner": "Ryoshu",
+    "slot": "Skill 2",
+    "defense": false
+  },
+  {
+    "file": "lcb/10401-s3.webp",
+    "label": "LCB Ryoshu - Skill 3",
+    "group": "LCB - Ryoshu",
+    "identity": "LCB Sinner",
+    "sinner": "Ryoshu",
+    "slot": "Skill 3",
+    "defense": false
+  },
+  {
+    "file": "lcb/10401-defense.webp",
+    "label": "LCB Ryoshu - Defense",
+    "group": "LCB - Ryoshu",
+    "identity": "LCB Sinner",
+    "sinner": "Ryoshu",
+    "slot": "Defense",
+    "defense": true,
+    "defenseType": "evade"
+  },
+  {
+    "file": "lcb/10501-s1.webp",
+    "label": "LCB Meursault - Skill 1",
+    "group": "LCB - Meursault",
+    "identity": "LCB Sinner",
+    "sinner": "Meursault",
+    "slot": "Skill 1",
+    "defense": false
+  },
+  {
+    "file": "lcb/10501-s2.webp",
+    "label": "LCB Meursault - Skill 2",
+    "group": "LCB - Meursault",
+    "identity": "LCB Sinner",
+    "sinner": "Meursault",
+    "slot": "Skill 2",
+    "defense": false
+  },
+  {
+    "file": "lcb/10501-s3.webp",
+    "label": "LCB Meursault - Skill 3",
+    "group": "LCB - Meursault",
+    "identity": "LCB Sinner",
+    "sinner": "Meursault",
+    "slot": "Skill 3",
+    "defense": false
+  },
+  {
+    "file": "lcb/10501-defense.webp",
+    "label": "LCB Meursault - Defense",
+    "group": "LCB - Meursault",
+    "identity": "LCB Sinner",
+    "sinner": "Meursault",
+    "slot": "Defense",
+    "defense": true,
+    "defenseType": "guard"
+  },
+  {
+    "file": "lcb/10601-s1.webp",
+    "label": "LCB Hong Lu - Skill 1",
+    "group": "LCB - Hong Lu",
+    "identity": "LCB Sinner",
+    "sinner": "Hong Lu",
+    "slot": "Skill 1",
+    "defense": false
+  },
+  {
+    "file": "lcb/10601-s2.webp",
+    "label": "LCB Hong Lu - Skill 2",
+    "group": "LCB - Hong Lu",
+    "identity": "LCB Sinner",
+    "sinner": "Hong Lu",
+    "slot": "Skill 2",
+    "defense": false
+  },
+  {
+    "file": "lcb/10601-s3.webp",
+    "label": "LCB Hong Lu - Skill 3",
+    "group": "LCB - Hong Lu",
+    "identity": "LCB Sinner",
+    "sinner": "Hong Lu",
+    "slot": "Skill 3",
+    "defense": false
+  },
+  {
+    "file": "lcb/10601-defense.webp",
+    "label": "LCB Hong Lu - Defense",
+    "group": "LCB - Hong Lu",
+    "identity": "LCB Sinner",
+    "sinner": "Hong Lu",
+    "slot": "Defense",
+    "defense": true,
+    "defenseType": "evade"
+  },
+  {
+    "file": "lcb/10701-s1.webp",
+    "label": "LCB Heathcliff - Skill 1",
+    "group": "LCB - Heathcliff",
+    "identity": "LCB Sinner",
+    "sinner": "Heathcliff",
+    "slot": "Skill 1",
+    "defense": false
+  },
+  {
+    "file": "lcb/10701-s2.webp",
+    "label": "LCB Heathcliff - Skill 2",
+    "group": "LCB - Heathcliff",
+    "identity": "LCB Sinner",
+    "sinner": "Heathcliff",
+    "slot": "Skill 2",
+    "defense": false
+  },
+  {
+    "file": "lcb/10701-s3.webp",
+    "label": "LCB Heathcliff - Skill 3",
+    "group": "LCB - Heathcliff",
+    "identity": "LCB Sinner",
+    "sinner": "Heathcliff",
+    "slot": "Skill 3",
+    "defense": false
+  },
+  {
+    "file": "lcb/10701-defense.webp",
+    "label": "LCB Heathcliff - Defense",
+    "group": "LCB - Heathcliff",
+    "identity": "LCB Sinner",
+    "sinner": "Heathcliff",
+    "slot": "Defense",
+    "defense": true,
+    "defenseType": "counter"
+  },
+  {
+    "file": "lcb/10801-s1.webp",
+    "label": "LCB Ishmael - Skill 1",
+    "group": "LCB - Ishmael",
+    "identity": "LCB Sinner",
+    "sinner": "Ishmael",
+    "slot": "Skill 1",
+    "defense": false
+  },
+  {
+    "file": "lcb/10801-s2.webp",
+    "label": "LCB Ishmael - Skill 2",
+    "group": "LCB - Ishmael",
+    "identity": "LCB Sinner",
+    "sinner": "Ishmael",
+    "slot": "Skill 2",
+    "defense": false
+  },
+  {
+    "file": "lcb/10801-s3.webp",
+    "label": "LCB Ishmael - Skill 3",
+    "group": "LCB - Ishmael",
+    "identity": "LCB Sinner",
+    "sinner": "Ishmael",
+    "slot": "Skill 3",
+    "defense": false
+  },
+  {
+    "file": "lcb/10801-defense.webp",
+    "label": "LCB Ishmael - Defense",
+    "group": "LCB - Ishmael",
+    "identity": "LCB Sinner",
+    "sinner": "Ishmael",
+    "slot": "Defense",
+    "defense": true,
+    "defenseType": "guard"
+  },
+  {
+    "file": "lcb/10901-s1.webp",
+    "label": "LCB Rodion - Skill 1",
+    "group": "LCB - Rodion",
+    "identity": "LCB Sinner",
+    "sinner": "Rodion",
+    "slot": "Skill 1",
+    "defense": false
+  },
+  {
+    "file": "lcb/10901-s2.webp",
+    "label": "LCB Rodion - Skill 2",
+    "group": "LCB - Rodion",
+    "identity": "LCB Sinner",
+    "sinner": "Rodion",
+    "slot": "Skill 2",
+    "defense": false
+  },
+  {
+    "file": "lcb/10901-s3.webp",
+    "label": "LCB Rodion - Skill 3",
+    "group": "LCB - Rodion",
+    "identity": "LCB Sinner",
+    "sinner": "Rodion",
+    "slot": "Skill 3",
+    "defense": false
+  },
+  {
+    "file": "lcb/10901-defense.webp",
+    "label": "LCB Rodion - Defense",
+    "group": "LCB - Rodion",
+    "identity": "LCB Sinner",
+    "sinner": "Rodion",
+    "slot": "Defense",
+    "defense": true,
+    "defenseType": "counter"
+  },
+  {
+    "file": "lcb/11001-s1.webp",
+    "label": "LCB Sinclair - Skill 1",
+    "group": "LCB - Sinclair",
+    "identity": "LCB Sinner",
+    "sinner": "Sinclair",
+    "slot": "Skill 1",
+    "defense": false
+  },
+  {
+    "file": "lcb/11001-s2.webp",
+    "label": "LCB Sinclair - Skill 2",
+    "group": "LCB - Sinclair",
+    "identity": "LCB Sinner",
+    "sinner": "Sinclair",
+    "slot": "Skill 2",
+    "defense": false
+  },
+  {
+    "file": "lcb/11001-s3.webp",
+    "label": "LCB Sinclair - Skill 3",
+    "group": "LCB - Sinclair",
+    "identity": "LCB Sinner",
+    "sinner": "Sinclair",
+    "slot": "Skill 3",
+    "defense": false
+  },
+  {
+    "file": "lcb/11001-defense.webp",
+    "label": "LCB Sinclair - Defense",
+    "group": "LCB - Sinclair",
+    "identity": "LCB Sinner",
+    "sinner": "Sinclair",
+    "slot": "Defense",
+    "defense": true,
+    "defenseType": "counter"
+  },
+  {
+    "file": "lcb/11101-s1.webp",
+    "label": "LCB Outis - Skill 1",
+    "group": "LCB - Outis",
+    "identity": "LCB Sinner",
+    "sinner": "Outis",
+    "slot": "Skill 1",
+    "defense": false
+  },
+  {
+    "file": "lcb/11101-s2.webp",
+    "label": "LCB Outis - Skill 2",
+    "group": "LCB - Outis",
+    "identity": "LCB Sinner",
+    "sinner": "Outis",
+    "slot": "Skill 2",
+    "defense": false
+  },
+  {
+    "file": "lcb/11101-s3.webp",
+    "label": "LCB Outis - Skill 3",
+    "group": "LCB - Outis",
+    "identity": "LCB Sinner",
+    "sinner": "Outis",
+    "slot": "Skill 3",
+    "defense": false
+  },
+  {
+    "file": "lcb/11101-defense.webp",
+    "label": "LCB Outis - Defense",
+    "group": "LCB - Outis",
+    "identity": "LCB Sinner",
+    "sinner": "Outis",
+    "slot": "Defense",
+    "defense": true,
+    "defenseType": "evade"
+  },
+  {
+    "file": "lcb/11201-s1.webp",
+    "label": "LCB Gregor - Skill 1",
+    "group": "LCB - Gregor",
+    "identity": "LCB Sinner",
+    "sinner": "Gregor",
+    "slot": "Skill 1",
+    "defense": false
+  },
+  {
+    "file": "lcb/11201-s2.webp",
+    "label": "LCB Gregor - Skill 2",
+    "group": "LCB - Gregor",
+    "identity": "LCB Sinner",
+    "sinner": "Gregor",
+    "slot": "Skill 2",
+    "defense": false
+  },
+  {
+    "file": "lcb/11201-s3.webp",
+    "label": "LCB Gregor - Skill 3",
+    "group": "LCB - Gregor",
+    "identity": "LCB Sinner",
+    "sinner": "Gregor",
+    "slot": "Skill 3",
+    "defense": false
+  },
+  {
+    "file": "lcb/11201-defense.webp",
+    "label": "LCB Gregor - Defense",
+    "group": "LCB - Gregor",
+    "identity": "LCB Sinner",
+    "sinner": "Gregor",
+    "slot": "Defense",
+    "defense": true,
+    "defenseType": "guard"
+  }
+]

@@ -60,7 +60,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
   top:50%;
   width:64px;
   height:64px;
-  transform:translate(calc(-50% + var(--icon-x,0px)),calc(-50% + var(--icon-y,0px))) scale(var(--icon-scale,1));
+  transform:translate(-50%,-50%);
   object-fit:contain;
   z-index:1;
   filter:var(--skill-art-filter, none) drop-shadow(0 0 6px rgba(0,0,0,.78));
@@ -73,7 +73,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
   height:62px;
   left:50%;
   top:50%;
-  transform:translate(calc(-50% + var(--icon-x,0px)),calc(-50% + var(--icon-y,0px))) scale(var(--icon-scale,1));
+  transform:translate(-50%,-50%);
   clip-path:polygon(30% 4%, 74% 4%, 96% 28%, 89% 74%, 58% 96%, 18% 88%, 4% 44%);
 }
 .sigil img.real-sin{right:-1px;bottom:-1px;z-index:4}
@@ -85,12 +85,3 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
 .sigil.sin-pride{--skill-art-filter: sepia(1) saturate(2.6) hue-rotate(184deg) brightness(1.04) contrast(1.04);}
 .sigil.sin-envy{--skill-art-filter: sepia(1) saturate(2.9) hue-rotate(228deg) brightness(1.02) contrast(1.06);}
 .skill-icon-caption{color:#75807c;margin-top:4px}
-
-/* v8.8 per-icon alignment controls */
-.icon-tune-row{margin-top:2px}
-
-/* v8.8 defense icon optical centering */
-.defense-card .sigil img.skill-art{
-  top:55%;
-  transform:translate(-50%,-50%);
-}

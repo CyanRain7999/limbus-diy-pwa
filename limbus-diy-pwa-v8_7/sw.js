@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'limbus-diy-pwa-v8-8-icon-align';
+const CACHE_VERSION = 'limbus-diy-pwa-v8-5-builtin-lcb';
 const CORE = [
   './','./index.html','./style.css','./app.js','./manifest.webmanifest',
   './icons/icon-192.png','./icons/icon-512.png','./assets/skill_icons/manifest.json'

@@ -1,0 +1,26 @@
+{
+  "name": "Limbus DIY 人格网页编辑器",
+  "short_name": "Limbus DIY",
+  "description": "Limbus Company DIY 人格技能、被动与状态介绍页编辑器",
+  "lang": "zh-CN",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a0d0d",
+  "theme_color": "#0a0d0d",
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
