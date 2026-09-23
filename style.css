@@ -14,16 +14,19 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
 .kw-sin-wrath{color:#f25645;font-weight:900}.kw-sin-lust{color:#df604b;font-weight:900}.kw-sin-sloth{color:#e6b74e;font-weight:900}.kw-sin-glut{color:#68bf55;font-weight:900}.kw-sin-gloom{color:#54a9c8;font-weight:900}.kw-sin-pride{color:#5d83e8;font-weight:900}.kw-sin-envy{color:#9e67dd;font-weight:900}.aff-wrath{color:#f25645}.aff-lust{color:#df604b}.aff-sloth{color:#e6b74e}.aff-glut{color:#68bf55}.aff-gloom{color:#54a9c8}.aff-pride{color:#5d83e8}.aff-envy{color:#9e67dd}.defense-card{border:1px solid #33423f;background:linear-gradient(90deg,#0c1615,#080a0a);padding:17px 20px 18px 138px;position:relative;min-height:210px}.defense-card .sigil{left:16px;top:37px;width:100px;height:100px}.defense-card h3{font-size:28px;margin:0}.defense-card .power{font-size:23px;color:#82cce0;margin:5px 0 7px;font-weight:900}.footer-note{position:absolute;left:60px;bottom:31px;font-size:12px;color:#706f68}.passive-grid{position:absolute;left:62px;right:62px;top:300px;bottom:56px;display:grid;grid-template-columns:1.08fr .92fr;gap:34px}.passive-col{display:flex;flex-direction:column;gap:22px}.block{border-top:1px solid rgba(167,122,74,.35);padding:16px 22px 20px;background:linear-gradient(90deg,rgba(25,19,15,.38),rgba(4,6,6,.12))}.block h2{font-family:Impact,"Arial Narrow",sans-serif;margin:0 0 7px;font-size:39px;color:#9d7652;letter-spacing:2px}.block h3{display:inline-block;margin:0 0 10px;background:#6e482d;color:#eee4d1;padding:4px 12px;font-size:25px}.block .cost{color:#d8b360;font-size:16px;margin:3px 0 12px}.block p{font-size:19px;line-height:1.5;margin:7px 0}.status-list{display:flex;flex-direction:column;gap:13px}.status{display:grid;grid-template-columns:74px 1fr;gap:14px;border:1px solid #4b473b;background:rgba(4,7,7,.82);padding:14px 16px}.status-icon{width:70px;height:70px;display:grid;place-items:center;background:#0a0e0d;border:1px solid #3c4d49;font-size:34px}.status-icon img{max-width:58px;max-height:58px}.status h4{font-size:24px;margin:0 0 3px;color:#e0c98e}.status p{font-size:17px;line-height:1.45;margin:4px 0}.status .cap{font-size:13px;color:#a69b81}.mini-icons{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}.mini{display:flex;align-items:center;gap:5px;background:#111716;border:1px solid #303b38;padding:5px 8px;font-size:13px}.mini img{width:24px;height:24px;object-fit:contain}
 @media(max-width:900px){.app{display:block}.editor{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line)}.preview{padding:8px;overflow:hidden}.sheet-wrap{transform:scale(.22);width:1767px;height:451px;margin-bottom:-1550px}.topbar{position:static}.row{grid-template-columns:1fr}}
 
+.export-status{display:none;margin:0 0 10px;padding:8px 10px;border:1px solid #31524d;border-radius:7px;font-size:12px;line-height:1.4}
+
 /* 技能页高度由内容决定，卡片和长字符串不会被固定画布裁切。 */
 #skillsPage .skills-grid{bottom:auto}
 #skillsPage .skill-name,#skillsPage .tags,#skillsPage .skill-meta,#skillsPage .defense-card{overflow-wrap:anywhere}
+#passivePage .passive-grid{bottom:auto}
+#passivePage .block,#passivePage .status{overflow-wrap:anywhere}
 @media(max-width:900px){.sheet-wrap{transform:scale(var(--preview-scale,.22));height:auto;margin-bottom:0}}
 
 /* v4 内置矢量图标：彻底去除跨域图片依赖 */
 .sigil-svg{width:104px;height:104px;display:block;filter:drop-shadow(0 0 5px rgba(0,0,0,.9))}
 .defense-card .sigil-svg{width:100px;height:100px}
-.mini-glyph{--glyph-color:#b8aa8b;width:28px;height:28px;display:inline-grid;place-items:center;flex:0 0 28px;border:1px solid color-mix(in srgb,var(--glyph-color) 70%,#222);background:color-mix(in srgb,var(--glyph-color) 16%,#080b0a);color:var(--glyph-color);font-weight:900;font-size:13px;line-height:1;border-radius:3px;box-shadow:inset 0 0 8px rgba(0,0,0,.6)}
-@supports not (color:color-mix(in srgb, red 50%, blue)){.mini-glyph{border-color:#53605c;background:#111716}}
+.mini-glyph{--glyph-color:#b8aa8b;width:28px;height:28px;display:inline-grid;place-items:center;flex:0 0 28px;border:1px solid var(--glyph-color);background:#111716;color:var(--glyph-color);font-weight:900;font-size:13px;line-height:1;border-radius:3px;box-shadow:inset 0 0 8px rgba(0,0,0,.6)}
 
 /* v5 真实技能边框素材 */
 .sigil img.real-frame{position:absolute;width:104px;height:104px;object-fit:contain;display:block;z-index:1}

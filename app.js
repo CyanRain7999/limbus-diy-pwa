@@ -323,6 +323,10 @@ function render(){
   const height=Math.max(2048,Math.ceil(grid.offsetTop+grid.offsetHeight+64));
   sheet.style.height=`${height}px`;
   sheet.querySelector('.footer-note').textContent=`DIY IDENTITY WEB EDITOR · 1767×${height}`;
+  const passiveSheet=document.getElementById('passivePage');
+  const passiveGrid=passiveSheet.querySelector('.passive-grid');
+  const passiveHeight=Math.max(2048,Math.ceil(passiveGrid.offsetTop+passiveGrid.offsetHeight+64));
+  passiveSheet.style.height=`${passiveHeight}px`;
   fitPreview();
 }
 window.addEventListener('resize',fitPreview);
@@ -380,6 +384,7 @@ async function saveBlobMobile(blob, filename, title){
   document.body.appendChild(a);
   a.click();
   a.remove();
+  setExportStatus(`已生成 ${blob.type==='image/png'?'PNG':'SVG'}，已请求下载。`);
 
   setTimeout(()=>{
     try{
@@ -407,7 +412,11 @@ function makeSheetSvgBlob(id){
   const css=[...document.styleSheets].flatMap(sheet=>{
     try{return [...sheet.cssRules].map(rule=>rule.cssText)}catch(_){return []}
   }).join('\n');
-  const xhtml=`<div xmlns="http://www.w3.org/1999/xhtml"><style>${css.replace(/<\/style>/g,'<\\/style>')}</style>${clone.outerHTML}</div>`;
+  const xhtmlRoot=document.createElementNS('http://www.w3.org/1999/xhtml','div');
+  const style=document.createElementNS('http://www.w3.org/1999/xhtml','style');
+  style.textContent=css;
+  xhtmlRoot.append(style,clone);
+  const xhtml=new XMLSerializer().serializeToString(xhtmlRoot);
   const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="1767" height="${height}" viewBox="0 0 1767 ${height}"><foreignObject width="1767" height="${height}">${xhtml}</foreignObject></svg>`;
   return new Blob([svg],{type:'image/svg+xml;charset=utf-8'});
 }
@@ -441,6 +450,47 @@ async function waitForExportImages(root){
     img.addEventListener('error',done,{once:true});
     setTimeout(done,6000);
   })));
+}
+function bakeSkillArtForExport(root){
+  for(const img of root.querySelectorAll('img.skill-art')){
+    if(!img.complete || !img.naturalWidth || !img.naturalHeight) continue;
+    const style=getComputedStyle(img);
+    const colorFilter=style.filter.replace(/\s*drop-shadow\(.*$/,'').trim();
+    if(!colorFilter || colorFilter==='none') continue;
+    const width=Math.round(parseFloat(style.width)*4);
+    const height=Math.round(parseFloat(style.height)*4);
+    if(!width || !height) continue;
+    const canvas=document.createElement('canvas');
+    canvas.width=width;
+    canvas.height=height;
+    const ctx=canvas.getContext('2d');
+    if(!ctx || !('filter' in ctx)) continue;
+    try{
+      const points=[...style.clipPath.matchAll(/([\d.]+)%\s+([\d.]+)%/g)];
+      if(points.length>=3){
+        ctx.beginPath();
+        points.forEach((point,i)=>{
+          const x=Number(point[1])*width/100;
+          const y=Number(point[2])*height/100;
+          if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+        });
+        ctx.closePath();
+        ctx.clip();
+      }
+      const scale=Math.min(width/img.naturalWidth,height/img.naturalHeight);
+      const drawWidth=img.naturalWidth*scale;
+      const drawHeight=img.naturalHeight*scale;
+      ctx.filter=colorFilter;
+      if(ctx.filter==='none') continue;
+      ctx.drawImage(img,(width-drawWidth)/2,(height-drawHeight)/2,drawWidth,drawHeight);
+      const baked=canvas.toDataURL('image/png');
+      img.style.setProperty('filter','none','important');
+      img.style.setProperty('clip-path','none','important');
+      img.src=baked;
+    }catch(e){
+      console.warn('Skill icon export tint failed:',e);
+    }
+  }
 }
 async function makeUnscaledExportClone(id){
   const source=document.getElementById(id);
@@ -480,9 +530,9 @@ async function makeUnscaledExportClone(id){
   const srcImgs=[...source.querySelectorAll('img')];
   const dstImgs=[...clone.querySelectorAll('img')];
   dstImgs.forEach((img,i)=>{
-    if(srcImgs[i] && srcImgs[i].src) img.src=srcImgs[i].src;
     img.crossOrigin='anonymous';
     img.referrerPolicy='no-referrer';
+    if(srcImgs[i] && srcImgs[i].src) img.src=srcImgs[i].src;
   });
 
   host.appendChild(clone);
@@ -491,6 +541,8 @@ async function makeUnscaledExportClone(id){
   if(document.fonts && document.fonts.ready){
     try{ await document.fonts.ready; }catch(e){}
   }
+  await waitForExportImages(clone);
+  bakeSkillArtForExport(clone);
   await waitForExportImages(clone);
   await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
 
@@ -542,6 +594,7 @@ async function savePage(id,label){
       await saveBlobMobile(pngBlob,filename,label);
       return;
     }catch(e){
+      console.warn('SVG to PNG export failed:',e);
       const svgName=(data.identity.name||'人格')+'_'+label+'.svg';
       setExportStatus(`当前浏览器不允许直接转 PNG，已经改用 SVG 保存；SVG 为完整 1767×${exportCopy.height} 页面。`);
       await saveBlobMobile(svgBlob,svgName,label+' SVG');

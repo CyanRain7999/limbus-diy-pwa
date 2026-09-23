@@ -9,10 +9,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="Limbus DIY" />
-<link rel="manifest" href="./manifest.webmanifest?v=9.1" />
+<link rel="manifest" href="./manifest.webmanifest?v=9.4" />
 <link rel="icon" href="./icons/icon-192.png" sizes="192x192" />
 <link rel="apple-touch-icon" href="./icons/icon-192.png" />
-<link rel="stylesheet" href="./style.css?v=9.1" />
+<link rel="stylesheet" href="./style.css?v=9.4" />
 </head>
 <body>
 <div class="app">
@@ -27,6 +27,7 @@
     <button class="btn primary" onclick="savePage('skillsPage','技能页')">保存 / 分享技能页（自动染色版）</button>
     <button class="btn primary" onclick="savePage('passivePage','被动页')">保存 / 分享被动页（自动染色版）</button>
   </div>
+  <div class="export-status" id="exportStatus" role="status" aria-live="polite"></div>
   <div class="tabs">
     <button class="tab active" onclick="showTab('basic',this)">基础</button>
     <button class="tab" onclick="showTab('skills',this)">技能</button>
@@ -63,6 +64,6 @@
 </aside>
 <main class="preview" id="preview"></main>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="./app.js?v=9.1"></script>
+<script src="./assets/vendor/html2canvas.min.js"></script>
+<script src="./app.js?v=9.4"></script>
 </body></html>

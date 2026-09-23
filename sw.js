@@ -1,7 +1,8 @@
-const CACHE_VERSION = 'limbus-diy-pwa-v9-1-adaptive-skills';
+const CACHE_VERSION = 'limbus-diy-pwa-v9-4-adaptive-passives';
 const CORE = [
-  './','./index.html','./style.css?v=9.1','./app.js?v=9.1','./manifest.webmanifest?v=9.1',
-  './icons/icon-192.png','./icons/icon-512.png','./assets/skill_icons/manifest.json'
+  './','./index.html','./style.css?v=9.4','./app.js?v=9.4','./manifest.webmanifest?v=9.4',
+  './icons/icon-192.png','./icons/icon-512.png','./assets/skill_icons/manifest.json',
+  './assets/vendor/html2canvas.min.js'
 ];
 const SINS=['wrath','lust','sloth','gluttony','gloom','pride','envy'];
 const LOCAL_ASSETS=[
