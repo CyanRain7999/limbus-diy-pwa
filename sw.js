@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'limbus-diy-pwa-v9-0-input-jank-fix';
+const CACHE_VERSION = 'limbus-diy-pwa-v9-1-adaptive-skills';
 const CORE = [
-  './','./index.html','./style.css?v=9.0','./app.js?v=9.0','./manifest.webmanifest?v=9.0',
+  './','./index.html','./style.css?v=9.1','./app.js?v=9.1','./manifest.webmanifest?v=9.1',
   './icons/icon-192.png','./icons/icon-512.png','./assets/skill_icons/manifest.json'
 ];
 const SINS=['wrath','lust','sloth','gluttony','gloom','pride','envy'];

@@ -300,7 +300,35 @@ function skillCard(raw){
   return `<div><div class="section-label">${esc(x.section)}</div><article class="skill ${esc(x.size)}">${sigil(x,tier)}<div class="skill-head"><div><div class="skill-name ${affClass[x.sin]||''}">${esc(x.name)}</div><div class="coin-row">基础 ${esc(x.base)} ${x.coins.map(c=>`<span class="coin-dot"><span>${esc(c)}</span></span>`).join('')}</div>${iconLine}</div><div class="skill-meta">${esc((sins[x.sin]||sins.Lust)[0])} · ${esc(displayType(x))}<br><b>攻击等级 ${esc(x.offense)}</b><br>裸最大 ${max}<br>攻击容量 ${esc(x.capacity||'1')}</div></div><div class="tags">${splitLines(x.effects)}</div></article></div>`
 }
 function header(sub,passive=false){let i=data.identity;return `<div class="noise"></div><div class="big-ghost">${passive?'PASSIVE / STATUS':'IDENTITY SKILL'}</div><header class="header"><div class="brand">LIMBUS<br>COMPANY<small>IDENTITY</small></div><div class="identity-title"><div class="org">${esc(i.org)}</div><h1>${esc(i.name)}</h1><div class="sub">${fmt(sub)}</div></div><div class="stats">${passive?`<div class="stat"><b>定位</b><span style="font-size:19px">${fmt(i.role)}</span></div><div class="stat"><b>主罪孽</b><span style="font-size:19px">${fmt(i.sins)}</span></div><div class="stat"><b>副体系</b><span style="font-size:19px">${fmt(i.systems)}</span></div><div class="stat"><b>循环</b><span style="font-size:16px">${fmt(i.cycle)}</span></div><div class="resists"><strong>核心循环</strong><span>${fmt(i.cycle)}</span></div>`:`<div class="stat"><b>生命值</b><span>${esc(i.hp)}</span></div><div class="stat"><b>速度</b><span>${esc(i.speed)}</span></div><div class="stat"><b>防御等级</b><span>${esc(i.def)}</span></div><div class="stat"><b>星级</b><span>${esc(i.stars)}</span></div><div class="resists"><strong>抗性 / 混乱</strong><span>${fmt(i.resists)}</span></div>`}</div><div class="stars">${esc(i.stars)}</div></header>`}
-function render(){let left=[],right=[];data.skills.forEach((s,i)=>(i%2?right:left).push(normalizeSkill(s)));document.getElementById('preview').innerHTML=`<div class="sheet-wrap"><section class="sheet" id="skillsPage">${header(data.identity.subtitle,false)}<main class="skills-grid"><div class="column">${left.map(skillCard).join('')}</div><div class="column">${right.map(skillCard).join('')}</div></main><div class="footer-note">DIY IDENTITY WEB EDITOR · 1767×2048</div></section><section class="sheet" id="passivePage">${header('战斗被动 / 支援被动 / 独有状态',true)}<main class="passive-grid"><div class="passive-col">${data.passives.map(p=>`<section class="block"><h2>${esc(p.title)}</h2><br><h3 style="background:${p.support?'#31574d':'#6e482d'}">${esc(p.name)}</h3>${p.cost?`<div class="cost">${fmt(p.cost)}</div>`:''}${splitLines(p.effects)}</section>`).join('')}</div><div class="passive-col"><div class="section-label">UNIQUE STATUS</div><div class="status-list">${data.statuses.map(s=>`<article class="status"><div class="status-icon">${esc(s.icon)}</div><div><h4>${esc(s.name)}</h4><div class="cap">${esc(s.cap)}</div>${splitLines(s.effects)}</div></article>`).join('')}</div><section class="block"><h2>RELATED EFFECTS</h2><div class="mini-icons">${data.related.map(r=>`<span class="mini">${statusGlyph(r[0],r[1])}${esc(r[1])}</span>`).join('')}</div></section></div></main><div class="footer-note">DIY IDENTITY WEB EDITOR · PASSIVE / STATUS · AUTO KEYWORDS</div></section></div>`}
+function renderMarkup(){let left=[],right=[];data.skills.forEach((s,i)=>(i%2?right:left).push(normalizeSkill(s)));document.getElementById('preview').innerHTML=`<div class="sheet-wrap"><section class="sheet" id="skillsPage">${header(data.identity.subtitle,false)}<main class="skills-grid"><div class="column">${left.map(skillCard).join('')}</div><div class="column">${right.map(skillCard).join('')}</div></main><div class="footer-note">DIY IDENTITY WEB EDITOR · 1767×2048</div></section><section class="sheet" id="passivePage">${header('战斗被动 / 支援被动 / 独有状态',true)}<main class="passive-grid"><div class="passive-col">${data.passives.map(p=>`<section class="block"><h2>${esc(p.title)}</h2><br><h3 style="background:${p.support?'#31574d':'#6e482d'}">${esc(p.name)}</h3>${p.cost?`<div class="cost">${fmt(p.cost)}</div>`:''}${splitLines(p.effects)}</section>`).join('')}</div><div class="passive-col"><div class="section-label">UNIQUE STATUS</div><div class="status-list">${data.statuses.map(s=>`<article class="status"><div class="status-icon">${esc(s.icon)}</div><div><h4>${esc(s.name)}</h4><div class="cap">${esc(s.cap)}</div>${splitLines(s.effects)}</div></article>`).join('')}</div><section class="block"><h2>RELATED EFFECTS</h2><div class="mini-icons">${data.related.map(r=>`<span class="mini">${statusGlyph(r[0],r[1])}${esc(r[1])}</span>`).join('')}</div></section></div></main><div class="footer-note">DIY IDENTITY WEB EDITOR · PASSIVE / STATUS · AUTO KEYWORDS</div></section></div>`}
+function fitPreview(){
+  const wrap=document.querySelector('#preview .sheet-wrap');
+  const preview=document.getElementById('preview');
+  if(!wrap || !preview) return;
+  if(window.innerWidth>900){
+    wrap.style.removeProperty('--preview-scale');
+    wrap.style.marginBottom='0';
+    return;
+  }
+  const style=getComputedStyle(preview);
+  const available=preview.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight);
+  const scale=Math.min(1,Math.max(0,available/1767));
+  wrap.style.setProperty('--preview-scale',scale);
+  wrap.style.marginBottom=`-${Math.ceil(wrap.scrollHeight*(1-scale))}px`;
+}
+function render(){
+  renderMarkup();
+  const sheet=document.getElementById('skillsPage');
+  const grid=sheet.querySelector('.skills-grid');
+  const height=Math.max(2048,Math.ceil(grid.offsetTop+grid.offsetHeight+64));
+  sheet.style.height=`${height}px`;
+  sheet.querySelector('.footer-note').textContent=`DIY IDENTITY WEB EDITOR · 1767×${height}`;
+  fitPreview();
+}
+window.addEventListener('resize',fitPreview);
+if(document.fonts?.ready) document.fonts.ready.then(()=>{
+  if(document.getElementById('skillsPage')) render();
+});
 function saveLocal(){localStorage.setItem('limbus_diy_project',JSON.stringify(data));alert('已经保存到这个浏览器里。')};function loadLocal(){let x=localStorage.getItem('limbus_diy_project');if(!x)return alert('这里还没有保存过项目。');data=JSON.parse(x);normalizeData();bindBasic();renderEditors();render()}
 function downloadJson(){let a=document.createElement('a');a.download=(data.identity.name||'人格')+'_DIY项目.json';a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
 function importJson(file){if(!file)return;let r=new FileReader();r.onload=()=>{try{data=JSON.parse(r.result);normalizeData();bindBasic();renderEditors();render()}catch(e){alert('项目文件格式不对：'+e.message)}};r.readAsText(file)}
@@ -366,6 +394,7 @@ async function saveBlobMobile(blob, filename, title){
 function makeSheetSvgBlob(id){
   const el=document.getElementById(id);
   if(!el) throw new Error('找不到要保存的页面');
+  const height=el.offsetHeight;
   const clone=el.cloneNode(true);
 
   const srcImgs=[...el.querySelectorAll('img')];
@@ -375,22 +404,24 @@ function makeSheetSvgBlob(id){
     img.removeAttribute('crossorigin');
   });
 
-  const css=[...document.querySelectorAll('style')].map(x=>x.textContent).join('\n');
+  const css=[...document.styleSheets].flatMap(sheet=>{
+    try{return [...sheet.cssRules].map(rule=>rule.cssText)}catch(_){return []}
+  }).join('\n');
   const xhtml=`<div xmlns="http://www.w3.org/1999/xhtml"><style>${css.replace(/<\/style>/g,'<\\/style>')}</style>${clone.outerHTML}</div>`;
-  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="1767" height="2048" viewBox="0 0 1767 2048"><foreignObject width="1767" height="2048">${xhtml}</foreignObject></svg>`;
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="1767" height="${height}" viewBox="0 0 1767 ${height}"><foreignObject width="1767" height="${height}">${xhtml}</foreignObject></svg>`;
   return new Blob([svg],{type:'image/svg+xml;charset=utf-8'});
 }
-async function svgBlobToPng(svgBlob){
+async function svgBlobToPng(svgBlob,height){
   return new Promise((resolve,reject)=>{
     const url=URL.createObjectURL(svgBlob);
     const img=new Image();
     img.onload=async()=>{
       try{
         const canvas=document.createElement('canvas');
-        canvas.width=1767; canvas.height=2048;
+        canvas.width=1767; canvas.height=height;
         const ctx=canvas.getContext('2d');
         ctx.fillStyle='#050707'; ctx.fillRect(0,0,canvas.width,canvas.height);
-        ctx.drawImage(img,0,0,1767,2048);
+        ctx.drawImage(img,0,0,1767,height);
         const png=await blobFromCanvas(canvas);
         URL.revokeObjectURL(url);
         resolve(png);
@@ -414,6 +445,7 @@ async function waitForExportImages(root){
 async function makeUnscaledExportClone(id){
   const source=document.getElementById(id);
   if(!source) throw new Error('找不到要导出的页面');
+  const height=source.offsetHeight;
 
   const host=document.createElement('div');
   host.id='__export_host__';
@@ -422,7 +454,7 @@ async function makeUnscaledExportClone(id){
     left:'-10000px',
     top:'0',
     width:'1767px',
-    height:'2048px',
+    height:`${height}px`,
     margin:'0',
     padding:'0',
     overflow:'hidden',
@@ -437,7 +469,7 @@ async function makeUnscaledExportClone(id){
   clone.removeAttribute('id');
   clone.id='__export_sheet__';
   clone.style.setProperty('width','1767px','important');
-  clone.style.setProperty('height','2048px','important');
+  clone.style.setProperty('height',`${height}px`,'important');
   clone.style.setProperty('min-width','1767px','important');
   clone.style.setProperty('max-width','1767px','important');
   clone.style.setProperty('transform','none','important');
@@ -462,7 +494,7 @@ async function makeUnscaledExportClone(id){
   await waitForExportImages(clone);
   await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
 
-  return {host, clone};
+  return {host, clone, height};
 }
 
 async function savePage(id,label){
@@ -481,9 +513,9 @@ async function savePage(id,label){
         useCORS:true,
         allowTaint:false,
         width:1767,
-        height:2048,
+        height:exportCopy.height,
         windowWidth:1767,
-        windowHeight:2048,
+        windowHeight:exportCopy.height,
         scrollX:0,
         scrollY:0,
         logging:false,
@@ -506,12 +538,12 @@ async function savePage(id,label){
     const svgBlob=makeSheetSvgBlob(cloneId);
     exportCopy.host.remove();
     try{
-      const pngBlob=await svgBlobToPng(svgBlob);
+      const pngBlob=await svgBlobToPng(svgBlob,exportCopy.height);
       await saveBlobMobile(pngBlob,filename,label);
       return;
     }catch(e){
       const svgName=(data.identity.name||'人格')+'_'+label+'.svg';
-      setExportStatus('当前浏览器不允许直接转 PNG，已经改用 SVG 保存；SVG 仍是完整 1767×2048 页面。');
+      setExportStatus(`当前浏览器不允许直接转 PNG，已经改用 SVG 保存；SVG 为完整 1767×${exportCopy.height} 页面。`);
       await saveBlobMobile(svgBlob,svgName,label+' SVG');
       return;
     }
