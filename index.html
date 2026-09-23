@@ -9,10 +9,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="Limbus DIY" />
-<link rel="manifest" href="./manifest.webmanifest?v=9.4" />
+<link rel="manifest" href="./manifest.webmanifest?v=9.5" />
 <link rel="icon" href="./icons/icon-192.png" sizes="192x192" />
 <link rel="apple-touch-icon" href="./icons/icon-192.png" />
-<link rel="stylesheet" href="./style.css?v=9.4" />
+<link rel="stylesheet" href="./style.css?v=9.5" />
 </head>
 <body>
 <div class="app">
@@ -24,16 +24,29 @@
     <button class="btn" onclick="downloadJson()">导出项目</button>
     <button class="btn" onclick="document.getElementById('filePick').click()">导入项目</button>
     <input id="filePick" type="file" accept="application/json" hidden onchange="importJson(this.files[0])">
+    <button class="btn primary" onclick="savePage('overviewPage','总集页')">保存 / 分享总集页</button>
     <button class="btn primary" onclick="savePage('skillsPage','技能页')">保存 / 分享技能页（自动染色版）</button>
     <button class="btn primary" onclick="savePage('passivePage','被动页')">保存 / 分享被动页（自动染色版）</button>
   </div>
   <div class="export-status" id="exportStatus" role="status" aria-live="polite"></div>
   <div class="tabs">
+    <button class="tab" onclick="showTab('overview',this)">总集</button>
     <button class="tab active" onclick="showTab('basic',this)">基础</button>
     <button class="tab" onclick="showTab('skills',this)">技能</button>
     <button class="tab" onclick="showTab('passives',this)">被动</button>
     <button class="tab" onclick="showTab('statuses',this)">状态</button>
   </div>
+
+  <section class="panel" id="tab-overview">
+    <div class="group"><h3>总集页主视觉</h3>
+      <div class="field"><label>角色插画</label><input id="overviewArtFile" type="file" accept="image/png,image/jpeg,image/webp" onchange="loadOverviewArt(this.files[0])"><div class="hint" id="overviewArtState">尚未上传图片。可先使用内置背景预览。</div></div>
+      <button class="btn small danger" type="button" onclick="removeOverviewArt()">移除主视觉</button>
+      <div class="row" style="margin-top:12px"><div class="field"><label>横向位置</label><input id="overviewArtX" type="range" min="0" max="100" oninput="setOverview('artX',Number(this.value))"></div><div class="field"><label>纵向位置</label><input id="overviewArtY" type="range" min="0" max="100" oninput="setOverview('artY',Number(this.value))"></div></div>
+      <div class="row"><div class="field"><label>图片缩放</label><input id="overviewArtScale" type="range" min="1" max="2" step="0.05" oninput="setOverview('artScale',Number(this.value))"></div><div class="field"><label>主题色</label><input id="overviewAccent" type="color" oninput="setOverview('accent',this.value)"></div></div>
+      <div class="field"><label>页眉短句</label><input id="overviewTagline" maxlength="40" oninput="setOverview('tagline',this.value)" placeholder="例如：战斗记录 / 人格档案"></div>
+      <div class="hint">技能和被动名称会自动从对应编辑页读取。插画会压缩后保存在项目文件中。</div>
+    </div>
+  </section>
 
   <section class="panel active" id="tab-basic">
     <div class="group"><h3>人格信息</h3>
@@ -65,5 +78,5 @@
 <main class="preview" id="preview"></main>
 </div>
 <script src="./assets/vendor/html2canvas.min.js"></script>
-<script src="./app.js?v=9.4"></script>
+<script src="./app.js?v=9.5"></script>
 </body></html>

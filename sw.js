@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'limbus-diy-pwa-v9-4-adaptive-passives';
+const CACHE_VERSION = 'limbus-diy-pwa-v9-5-overview';
 const CORE = [
-  './','./index.html','./style.css?v=9.4','./app.js?v=9.4','./manifest.webmanifest?v=9.4',
+  './','./index.html','./style.css?v=9.5','./app.js?v=9.5','./manifest.webmanifest?v=9.5',
   './icons/icon-192.png','./icons/icon-512.png','./assets/skill_icons/manifest.json',
   './assets/vendor/html2canvas.min.js'
 ];

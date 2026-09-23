@@ -46,6 +46,14 @@ function normalizeData(){
   data.passives=Array.isArray(data.passives)?data.passives:[];
   data.statuses=Array.isArray(data.statuses)?data.statuses:[];
   data.related=Array.isArray(data.related)?data.related:[];
+  const overview=data.overview && typeof data.overview==='object'?data.overview:{};
+  data.overview={art:'',artX:50,artY:50,artScale:1,accent:'#b87843',tagline:'IDENTITY DOSSIER',...overview};
+  if(!/^data:image\/(?:png|jpeg|webp);base64,/i.test(data.overview.art)) data.overview.art='';
+  data.overview.artX=Math.max(0,Math.min(100,Number(data.overview.artX)||0));
+  data.overview.artY=Math.max(0,Math.min(100,Number(data.overview.artY)||0));
+  data.overview.artScale=Math.max(1,Math.min(2,Number(data.overview.artScale)||1));
+  if(!/^#[0-9a-f]{6}$/i.test(data.overview.accent)) data.overview.accent='#b87843';
+  data.overview.tagline=String(data.overview.tagline||'IDENTITY DOSSIER').slice(0,40);
 }
 normalizeData();
 let __previewRenderTimer=null;
@@ -111,7 +119,35 @@ function fmt(s=''){
 function splitLines(s=''){return s.split(/\n+/).filter(Boolean).map(x=>`<p>${fmt(x)}</p>`).join('')}
 function syncBasic(){['org','name','subtitle','hp','speed','def','resists','role','sins','systems','cycle'].forEach(k=>data.identity[k]=document.getElementById(k).value);data.identity.stars=document.getElementById('stars').value;scheduleRender()}
 function syncRelated(){data.related=document.getElementById('related').value.split(/\n+/).filter(Boolean).map(x=>{let [f,l]=x.split('|');return [f?.trim()||'',l?.trim()||'']});scheduleRender()}
-function bindBasic(){for(const k of ['org','name','subtitle','hp','speed','def','resists','role','sins','systems','cycle'])document.getElementById(k).value=data.identity[k]||'';document.getElementById('stars').value=data.identity.stars||'◈◈◈';document.getElementById('related').value=data.related.map(x=>x.join('|')).join('\n')}
+function bindBasic(){for(const k of ['org','name','subtitle','hp','speed','def','resists','role','sins','systems','cycle'])document.getElementById(k).value=data.identity[k]||'';document.getElementById('stars').value=data.identity.stars||'◈◈◈';document.getElementById('related').value=data.related.map(x=>x.join('|')).join('\n');bindOverview()}
+function bindOverview(){
+  for(const key of ['artX','artY','artScale','accent','tagline']) document.getElementById('overview'+key[0].toUpperCase()+key.slice(1)).value=data.overview[key];
+  document.getElementById('overviewArtState').textContent=data.overview.art?'主视觉已添加，并保存在项目数据中。':'尚未上传图片。可先使用内置背景预览。';
+}
+function setOverview(key,value){data.overview[key]=value;scheduleRender()}
+function removeOverviewArt(){data.overview.art='';document.getElementById('overviewArtFile').value='';bindOverview();render()}
+function loadOverviewArt(file){
+  if(!file) return;
+  if(!/^image\/(png|jpeg|webp)$/.test(file.type) || file.size>20*1024*1024){alert('请选择 20MB 以内的 PNG、JPG 或 WebP 图片。');return}
+  const url=URL.createObjectURL(file);
+  const img=new Image();
+  img.onload=()=>{
+    try{
+      const ratio=Math.min(1,2000/img.naturalWidth,1100/img.naturalHeight);
+      const canvas=document.createElement('canvas');
+      canvas.width=Math.max(1,Math.round(img.naturalWidth*ratio));
+      canvas.height=Math.max(1,Math.round(img.naturalHeight*ratio));
+      canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+      const webp=canvas.toDataURL('image/webp',.84);
+      data.overview.art=webp.startsWith('data:image/webp')?webp:canvas.toDataURL('image/jpeg',.84);
+      document.getElementById('overviewArtFile').value='';
+      bindOverview();render();
+    }catch(e){alert('主视觉读取失败：'+e.message)}
+    URL.revokeObjectURL(url);
+  };
+  img.onerror=()=>{URL.revokeObjectURL(url);alert('无法读取这张图片。')};
+  img.src=url;
+}
 function sinOpts(sel){return Object.entries(sins).map(([k,v])=>`<option value="${k}" ${sel===k?'selected':''}>${v[0]}</option>`).join('')}
 function frameOpts(sel='auto'){return FRAME_OPTIONS.map(opt=>`<option value="${opt.value}" ${sel===opt.value?'selected':''}>${opt.label}</option>`).join('')}
 function defenseTypeOpts(sel=''){const opts=[['','自动'],['guard','Guard / 守备'],['evade','Evade / 闪避'],['counter','Counter / 反击']];return opts.map(([v,l])=>`<option value="${v}" ${sel===v?'selected':''}>${l}</option>`).join('')}
@@ -301,6 +337,18 @@ function skillCard(raw){
 }
 function header(sub,passive=false){let i=data.identity;return `<div class="noise"></div><div class="big-ghost">${passive?'PASSIVE / STATUS':'IDENTITY SKILL'}</div><header class="header"><div class="brand">LIMBUS<br>COMPANY<small>IDENTITY</small></div><div class="identity-title"><div class="org">${esc(i.org)}</div><h1>${esc(i.name)}</h1><div class="sub">${fmt(sub)}</div></div><div class="stats">${passive?`<div class="stat"><b>定位</b><span style="font-size:19px">${fmt(i.role)}</span></div><div class="stat"><b>主罪孽</b><span style="font-size:19px">${fmt(i.sins)}</span></div><div class="stat"><b>副体系</b><span style="font-size:19px">${fmt(i.systems)}</span></div><div class="stat"><b>循环</b><span style="font-size:16px">${fmt(i.cycle)}</span></div><div class="resists"><strong>核心循环</strong><span>${fmt(i.cycle)}</span></div>`:`<div class="stat"><b>生命值</b><span>${esc(i.hp)}</span></div><div class="stat"><b>速度</b><span>${esc(i.speed)}</span></div><div class="stat"><b>防御等级</b><span>${esc(i.def)}</span></div><div class="stat"><b>星级</b><span>${esc(i.stars)}</span></div><div class="resists"><strong>抗性 / 混乱</strong><span>${fmt(i.resists)}</span></div>`}</div><div class="stars">${esc(i.stars)}</div></header>`}
 function renderMarkup(){let left=[],right=[];data.skills.forEach((s,i)=>(i%2?right:left).push(normalizeSkill(s)));document.getElementById('preview').innerHTML=`<div class="sheet-wrap"><section class="sheet" id="skillsPage">${header(data.identity.subtitle,false)}<main class="skills-grid"><div class="column">${left.map(skillCard).join('')}</div><div class="column">${right.map(skillCard).join('')}</div></main><div class="footer-note">DIY IDENTITY WEB EDITOR · 1767×2048</div></section><section class="sheet" id="passivePage">${header('战斗被动 / 支援被动 / 独有状态',true)}<main class="passive-grid"><div class="passive-col">${data.passives.map(p=>`<section class="block"><h2>${esc(p.title)}</h2><br><h3 style="background:${p.support?'#31574d':'#6e482d'}">${esc(p.name)}</h3>${p.cost?`<div class="cost">${fmt(p.cost)}</div>`:''}${splitLines(p.effects)}</section>`).join('')}</div><div class="passive-col"><div class="section-label">UNIQUE STATUS</div><div class="status-list">${data.statuses.map(s=>`<article class="status"><div class="status-icon">${esc(s.icon)}</div><div><h4>${esc(s.name)}</h4><div class="cap">${esc(s.cap)}</div>${splitLines(s.effects)}</div></article>`).join('')}</div><section class="block"><h2>RELATED EFFECTS</h2><div class="mini-icons">${data.related.map(r=>`<span class="mini">${statusGlyph(r[0],r[1])}${esc(r[1])}</span>`).join('')}</div></section></div></main><div class="footer-note">DIY IDENTITY WEB EDITOR · PASSIVE / STATUS · AUTO KEYWORDS</div></section></div>`}
+function overviewPage(){
+  const o=data.overview,i=data.identity;
+  const art=o.art?`<img class="overview-art" src="${esc(o.art)}" alt="">`:'<div class="overview-art-empty">IDENTITY ARCHIVE</div>';
+  const skills=data.skills.map(raw=>{
+    const x=normalizeSkill(raw);
+    const tier=x.defense?1:Math.min(3,Math.max(1,parseInt((String(x.section).match(/\d+/)||['1'])[0])));
+    return `<article class="overview-skill"><div class="overview-skill-label">${esc(x.section)}</div><div class="overview-icon">${sigil(x,tier)}</div><div class="overview-coins"><span>基础 ${esc(x.base)}</span>${x.coins.map(c=>`<span class="overview-coin"><span>${esc(c)}</span></span>`).join('')}</div><div class="overview-skill-name">${esc(x.name)}</div></article>`;
+  }).join('');
+  const passives=data.passives.map(p=>`<article class="overview-passive ${p.support?'overview-support':''}"><div class="overview-passive-title">${esc(p.title||'PASSIVE')}</div><div class="overview-passive-name">${esc(p.name||'未命名被动')}</div>${p.cost?`<div class="overview-passive-cost">${fmt(p.cost)}</div>`:''}</article>`).join('');
+  const statuses=data.statuses.map(s=>`<div class="overview-status"><span class="overview-status-icon">${esc(s.icon||'✦')}</span><span>${esc(s.name||'未命名状态')}</span><small>${esc(s.cap||'')}</small></div>`).join('');
+  return `<section class="sheet overview-sheet" id="overviewPage" style="--overview-accent:${o.accent};--art-x:${o.artX}%;--art-y:${o.artY}%;--art-scale:${o.artScale}"><div class="overview-hero">${art}<div class="overview-hero-shade"></div><div class="overview-brand">LIMBUS<br>COMPANY<small>IDENTITY ARCHIVE</small></div><div class="overview-identity"><div class="overview-org">${esc(i.org)}</div><h1>${esc(i.name)}</h1><div class="overview-stars">${esc(i.stars)}</div></div><div class="overview-hero-bottom"><strong>${esc(o.tagline)}</strong><p>${esc(i.subtitle)}</p></div></div><div class="overview-body"><section><div class="overview-heading">SKILL / DEFENSE <span>${data.skills.length} ENTRIES</span></div><div class="overview-skill-grid">${skills||'<p class="overview-empty">请在「技能」页添加技能。</p>'}</div></section><section><div class="overview-heading">PASSIVE <span>${data.passives.length} ENTRIES</span></div><div class="overview-passive-list">${passives||'<p class="overview-empty">请在「被动」页添加被动。</p>'}</div>${statuses?`<div class="overview-heading overview-status-heading">UNIQUE STATUS</div><div class="overview-status-list">${statuses}</div>`:''}</section></div><div class="footer-note">DIY IDENTITY WEB EDITOR · OVERVIEW · ${esc(i.hp)} HP / ${esc(i.speed)} SPD</div></section>`;
+}
 function fitPreview(){
   const wrap=document.querySelector('#preview .sheet-wrap');
   const preview=document.getElementById('preview');
@@ -318,6 +366,7 @@ function fitPreview(){
 }
 function render(){
   renderMarkup();
+  document.querySelector('#preview .sheet-wrap').insertAdjacentHTML('afterbegin',overviewPage());
   const sheet=document.getElementById('skillsPage');
   const grid=sheet.querySelector('.skills-grid');
   const height=Math.max(2048,Math.ceil(grid.offsetTop+grid.offsetHeight+64));
@@ -333,7 +382,7 @@ window.addEventListener('resize',fitPreview);
 if(document.fonts?.ready) document.fonts.ready.then(()=>{
   if(document.getElementById('skillsPage')) render();
 });
-function saveLocal(){localStorage.setItem('limbus_diy_project',JSON.stringify(data));alert('已经保存到这个浏览器里。')};function loadLocal(){let x=localStorage.getItem('limbus_diy_project');if(!x)return alert('这里还没有保存过项目。');data=JSON.parse(x);normalizeData();bindBasic();renderEditors();render()}
+function saveLocal(){try{localStorage.setItem('limbus_diy_project',JSON.stringify(data));alert('已经保存到这个浏览器里。')}catch(e){alert('本机存储空间不足，请使用「导出项目」保存到文件。')}};function loadLocal(){let x=localStorage.getItem('limbus_diy_project');if(!x)return alert('这里还没有保存过项目。');data=JSON.parse(x);normalizeData();bindBasic();renderEditors();render()}
 function downloadJson(){let a=document.createElement('a');a.download=(data.identity.name||'人格')+'_DIY项目.json';a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
 function importJson(file){if(!file)return;let r=new FileReader();r.onload=()=>{try{data=JSON.parse(r.result);normalizeData();bindBasic();renderEditors();render()}catch(e){alert('项目文件格式不对：'+e.message)}};r.readAsText(file)}
 
